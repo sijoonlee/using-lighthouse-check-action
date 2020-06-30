@@ -13,6 +13,8 @@ jobs:
     - name: run ngnix
       run: docker container run --rm -d -p 11111:80 -v /home/runner/work/using-lighthouse-check-action/using-lighthouse-check-action/packages/web-server/out:/usr/share/nginx/html mock-server
     
+    - run: mkdir /tmp/artifacts
+    
     - name: Run Lighthouse # https://github.com/marketplace/actions/lighthouse-check
       uses: foo-software/lighthouse-check-action@master
       id: lighthouseCheck
