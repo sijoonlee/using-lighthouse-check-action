@@ -1,0 +1,32 @@
+name: A workflow for lighthouse action
+on: push
+jobs:
+  lighthouse-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: build ngnix
+      run: docker image build -t mock-server /home/runner/work/github-action-playground/github-action-playground/packages/web-server/docker/static
+
+    - name: run ngnix
+      run: docker container run --rm -d -p 11111:80 -v /home/runner/work/github-action-playground/github-action-playground/packages/web-server/out:/usr/share/nginx/html mock-server
+    
+    - name: Run Lighthouse # https://github.com/marketplace/actions/lighthouse-check
+      uses: foo-software/lighthouse-check-action@master
+      id: lighthouseCheck
+      with:
+        urls: 'http://localhost:11111/404.html, http://localhost:11111/index.html'
+        # 'https://www.foo.software,https://www.foo.software/contact'
+    - name: Handle Lighthouse Check results
+      uses: foo-software/lighthouse-check-status-action@master
+      with:
+        lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+        minAccessibilityScore: "50"
+        minBestPracticesScore: "50"
+        minPerformanceScore: "50"
+        minProgressiveWebAppScore: "50"
+        minSeoScore: "60"
+          
+
