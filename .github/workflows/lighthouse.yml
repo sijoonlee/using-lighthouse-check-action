@@ -19,6 +19,14 @@ jobs:
       with:
         urls: 'http://localhost:11111/404.html, http://localhost:11111/index.html'
         # 'https://www.foo.software,https://www.foo.software/contact'
+        outputDirectory: /tmp/artifacts
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: Lighthouse reports
+        path: /tmp/artifacts
+
     - name: Handle Lighthouse Check results
       uses: foo-software/lighthouse-check-status-action@master
       with:
@@ -28,5 +36,7 @@ jobs:
         minPerformanceScore: "50"
         minProgressiveWebAppScore: "50"
         minSeoScore: "60"
+
+
           
 
